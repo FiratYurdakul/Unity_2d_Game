@@ -26,6 +26,7 @@ public class PLayer1 : MonoBehaviour
     private bool isWallDetected;
 
     private float xInput;
+    private float yInput;
     private bool facingRight = true;
     private int facingDir = 1;
 
@@ -40,21 +41,30 @@ public class PLayer1 : MonoBehaviour
     {
         UpdateAirborneStatus();
 
-        HandleCollision();
+        
         HandleInput();
         HandleWallSlide();
         HandleMovement();
         HandleFlip();
+        HandleCollision();
         HandleAnimations();
 
     }
 
-    private void HandleWallSlide()
+    private void  HandleWallSlide()
     {
-        if(isWallDetected && rb.linearVelocity.y < 0)
+        bool canWallSlide = isWallDetected && rb.linearVelocity.y < 0;
+        float yModifier = .05f;
+
+        if (canWallSlide == false)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
+            return;
         }
+        if (yInput<0)
+            yModifier = 1;
+
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * yModifier);
+      
 
     }
 
@@ -89,18 +99,25 @@ public class PLayer1 : MonoBehaviour
         anim.SetFloat("xVelocity", rb.linearVelocity.x);
         anim.SetFloat("yVelocity", rb.linearVelocity.y);
         anim.SetBool("isGrounded", isGrounded);
+        anim.SetBool("isWallDetected", isWallDetected);
        //nim.SetBool("IsRunning", IsRunning);
         //Running = rb.linearVelocity.x != 0;
     }
 
     private void HandleMovement()
     {
+        if (isWallDetected)
+        {
+            return;
+        }
+
         rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
     }
     private void HandleInput()
     {
 
         xInput = Input.GetAxisRaw("Horizontal");
+        yInput = Input.GetAxisRaw("Vertical");
         //rb.linearVelocity = new Vector2(xInput * moveSpeed, rb.linearVelocity.y);
 
 
@@ -132,7 +149,7 @@ public class PLayer1 : MonoBehaviour
 
     private void HandleFlip()
     {
-        if(rb.linearVelocity.x < 0 && facingRight || rb.linearVelocity.x > 0 && !facingRight)
+        if(xInput < 0 && facingRight || xInput > 0 && !facingRight)
         {
             Flip();
            
