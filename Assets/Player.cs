@@ -34,7 +34,6 @@ public class PLayer1 : MonoBehaviour
     [SerializeField] private float knockbackDuration = 1;
     [SerializeField] private Vector2 knockbackPower;
     private bool isknocked;
-    private bool canBeKnocked;
 
 
     [Header("Collision Info")]
@@ -244,11 +243,9 @@ public class PLayer1 : MonoBehaviour
 
     private IEnumerator KnockBackRoutine()
     {
-        canBeKnocked = false;   
         isknocked = true;
 
         yield return new WaitForSeconds(knockbackDuration);
-        canBeKnocked = true;
         isknocked = false;  
     }
 
