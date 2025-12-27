@@ -54,6 +54,7 @@ public class PLayer1 : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
+
     }
 
     private void Update()
